@@ -1,0 +1,12 @@
+name: hive
+
+ghc-options: -Wall
+
+default-extensions:
+  - GADTSyntax
+
+dependencies:
+  - base
+
+library:
+  source-dirs: .
