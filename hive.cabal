@@ -15,5 +15,9 @@ library
   build-depends:
       base
   exposed-modules:
-      Hive
+      Board
+      Bug
+      Color
+      List
+      Player
   default-language: Haskell2010

@@ -1,0 +1,18 @@
+Things to do:
+
+- define Game type
+
+- define more board manipulation actions
+    - [x] grow board
+    - [x] remove piece
+
+- define a "move"
+  - [ ] validate
+
+- define what the pieces do (movement rules)
+
+- undo functionality
+
+- given a piece, return valid locations to move it
+
+- define how a turn happens (place/move, pass turn)
