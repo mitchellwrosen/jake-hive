@@ -16,11 +16,13 @@ module Board
 import Bug
 import Color
 import List
+import Tuple
 
 type RowNum = Int
 type ColNum = Int
 
 -- Invariant: The board is a rectangle
+-- TODO: Add bool field
 data Board where
   MakeBoard :: [[Cell]] -> Board
   deriving Show
@@ -70,22 +72,26 @@ placeTileOnRow n tile (cell:cells) = cell : placeTileOnRow (n-1) tile cells
 -- Remove a tile from a board at a specific row and column.
 --
 -- Precondition: row/col must be valid.
-removeTile :: RowNum -> ColNum -> Board -> Board
-removeTile r c (MakeBoard board) = MakeBoard (removeTile_ r c board)
+removeTile :: RowNum -> ColNum -> Board -> (Tile, Board)
+removeTile r c (MakeBoard board) = mapSnd MakeBoard (removeTile_ r c board)
 
-removeTile_ :: RowNum -> ColNum -> [[Cell]] -> [[Cell]]
+removeTile_ :: RowNum -> ColNum -> [[Cell]] -> (Tile, [[Cell]])
 removeTile_ _ _ [] = error "Empty board!"
-removeTile_ 0 c (row:rows) = removeTileFromRow c row : rows
-removeTile_ r c (row:rows) = row : removeTile_ (r-1) c rows
+removeTile_ 0 c (row:rows) =
+  mapSnd (\row' -> row' : rows) (removeTileFromRow c row)
+removeTile_ r c (row:rows) =
+  mapSnd (\rows' -> row : rows') (removeTile_ (r-1) c rows)
 
-removeTileFromRow :: ColNum -> [Cell] -> [Cell]
+removeTileFromRow :: ColNum -> [Cell] -> (Tile, [Cell])
 removeTileFromRow _ [] = error "Empty row!"
-removeTileFromRow 0 (cell:cells) = removeTileFromCell cell : cells
-removeTileFromRow n (cell:cells) = cell : removeTileFromRow (n-1) cells
+removeTileFromRow 0 (cell:cells) =
+  mapSnd (\cell' -> cell' : cells) (removeTileFromCell cell)
+removeTileFromRow n (cell:cells) =
+  mapSnd (\cells' -> cell : cells') (removeTileFromRow (n-1) cells)
 
-removeTileFromCell :: Cell -> Cell
+removeTileFromCell :: Cell -> (Tile, Cell)
 removeTileFromCell [] = error "Empty cell!"
-removeTileFromCell (_:tiles) = tiles
+removeTileFromCell (tile:tiles) = (tile, tiles)
 
 --------------------------------------------------------------------------------
 -- Growing the board

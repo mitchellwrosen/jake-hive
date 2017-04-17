@@ -18,6 +18,9 @@ library
       Board
       Bug
       Color
+      Game
       List
+      Move
       Player
+      Tuple
   default-language: Haskell2010
