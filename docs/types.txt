@@ -1,0 +1,38 @@
+Board
+  = {
+      "board": [[Cell]]
+    }
+
+Bug
+  = "ant"
+  | "beetle"
+  | "grasshopper"
+  | "queen"
+  | "spider"
+
+Cell
+  = [Tile]
+
+Color
+  = "white"
+  | "black"
+
+Coord
+  = {
+      "row": int,
+      "col": int
+    }
+
+Game
+  = {
+      "turn": Color,
+      "white_bugs": [Bug],
+      "black_bugs": [Bug],
+      "board": Board
+    }
+
+Tile
+  = {
+      "color": Color,
+      "bug": Bug
+    }

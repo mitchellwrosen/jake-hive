@@ -1,0 +1,24 @@
+ErrorMessage
+  = {
+      "tag": "error",
+      "contents": {
+        "message": string
+      }
+    }
+
+GameStartMessage
+  = {
+      "tag": "game_start",
+      "contents": {
+        "color": Color,
+        "game": Game
+      }
+    }
+
+GameStateMessage
+  = {
+      "tag": "game_state",
+      "contents": {
+        "game": Game
+      }
+    }

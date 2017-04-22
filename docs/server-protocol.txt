@@ -1,0 +1,121 @@
+================================================================================
+Global state
+================================================================================
+
+-- The first player to connect to the server
+Player1 :: Maybe Connection
+
+-- The second player to connect to the server
+Player2 :: Maybe Connection
+
+-- The state of the game
+Game :: Game
+
+================================================================================
+State machine
+================================================================================
+
+[Server Start]
+
+  - Preconditions:
+    - Player1 is Nothing
+    - Player2 is Nothing
+
+ClientConnects (conn :: Connection)
+  accept(conn)
+  Player1 := Just conn
+
+  Goto [Waiting for P2]
+
+--------------------------------------------------------------------------------
+
+[Waiting for P2]
+
+  - Preconditions
+    - Player1 is Just
+    - Player2 is Nothing
+
+ClientConnects (conn :: Connection)
+  accept(conn)
+
+  Player2 := Just conn
+
+  Goto [New Game]
+
+ClientDisconnects (conn :: Connection)
+  Player1 := Nothing
+
+  Goto [Server Start]
+
+RecvMessage (conn :: Connection)
+  close(conn)
+
+  Player1 := Nothing
+
+  Goto [Server Start]
+
+
+--------------------------------------------------------------------------------
+
+[New Game]
+
+  - Preconditions
+    - Player1 is Just
+    - Player2 is Just
+
+Game := new_game()
+
+send_to(Player1, GameStartMessage{color = "white", game = Game})
+
+send_to(Player2, GameStartMessage{color = "black", game = Game)
+
+Goto [Game]
+
+--------------------------------------------------------------------------------
+
+[Game]
+
+  - Preconditions
+    - Player1 is Just
+    - Player2 is Just
+
+ClientConnects (conn :: Connection)
+  reject(conn)
+
+  Goto [Game]
+
+ClientDisconnects (conn :: Connection)
+  send_to(opponent_of(conn), ErrorMessage{message = "Opponent disconnected."})
+
+  close(opponent_of(conn))
+
+  Player1 := Nothing
+  Player2 := Nothing
+
+  Goto [Server Start]
+
+RecvMessage (conn :: Connection) (move :: MoveMessage)
+  Game := apply_move(move, game)
+
+  send_to(conn, GameStateMessage{game = Game})
+
+  send_to(opponent_of(conn), GameStateMessage{game = Game})
+
+  Goto [Game]
+
+RecvMessage (conn :: Connection) ResetMessage
+  Goto [New Game]
+
+RecvMessage (conn :: Connection) _
+  send_to(conn, ErrorMessage{message = "Unknown message."})
+
+  close(conn)
+
+  send_to(opponent_of(conn), ErrorMessage{message = "Opponent disconnected."})
+
+  close(opponent_of(conn))
+
+  Player1 := Nothing
+  Player2 := Nothing
+
+  Goto [Server Start]

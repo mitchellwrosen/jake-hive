@@ -1,0 +1,28 @@
+MoveMessage
+  = {
+      "tag": "move",
+      "contents": {
+        "tag": "move",
+        "contents": {
+          "path": [Coord]
+        }
+      }
+    }
+
+  | {
+      "tag": "move",
+      "contents": {
+        "tag": "new",
+        "contents": {
+          "bug": Bug,
+          "coord": Coord
+        }
+      }
+    }
+
+ResetMessage
+  = {
+      "tag": "reset",
+      "contents": {
+      }
+    }
