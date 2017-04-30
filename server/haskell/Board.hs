@@ -24,8 +24,17 @@ type ColNum = Int
 -- Invariant: The board is a rectangle
 -- TODO: Add bool field
 data Board where
-  MakeBoard :: [[Cell]] -> Board
+  MakeBoard :: Parity -> [[Cell]] -> Board
   deriving Show
+
+data Parity where
+  Up :: Parity
+  Down :: Parity
+  deriving Show
+
+flipParity :: Parity -> Parity
+flipPartiy Up = Down
+flipParity Down = Up
 
 type Cell = [Tile]
 
@@ -34,17 +43,17 @@ data Tile where
   deriving (Show)
 
 initialBoard :: Board
-initialBoard = MakeBoard [[[]]]
+initialBoard = MakeBoard Up [[[]]]
 
 --------------------------------------------------------------------------------
 -- Board dimensions
 
 boardRows :: Board -> Int
-boardRows (MakeBoard rows) = length rows
+boardRows (MakeBoard _ rows) = length rows
 
 boardCols :: Board -> Int
-boardCols (MakeBoard []) = 0
-boardCols (MakeBoard (row:_)) = length row
+boardCols (MakeBoard _ []) = 0
+boardCols (MakeBoard _ (row:_)) = length row
 
 --------------------------------------------------------------------------------
 -- Placing a tile
@@ -54,7 +63,8 @@ boardCols (MakeBoard (row:_)) = length row
 -- Precondition: row/col must be valid.
 -- Precondition: the placement must be valid per the rules of the game.
 placeTile :: RowNum -> ColNum -> Tile -> Board -> Board
-placeTile r c tile (MakeBoard board) = MakeBoard (placeTile_ r c tile board)
+placeTile r c tile (MakeBoard parity board) =
+  MakeBoard parity (placeTile_ r c tile board)
 
 placeTile_ :: RowNum -> ColNum -> Tile -> [[Cell]] -> [[Cell]]
 placeTile_ _ _ _ [] = error "Empty board!"
@@ -73,7 +83,8 @@ placeTileOnRow n tile (cell:cells) = cell : placeTileOnRow (n-1) tile cells
 --
 -- Precondition: row/col must be valid.
 removeTile :: RowNum -> ColNum -> Board -> (Tile, Board)
-removeTile r c (MakeBoard board) = mapSnd MakeBoard (removeTile_ r c board)
+removeTile r c (MakeBoard parity board) =
+  mapSnd (MakeBoard parity) (removeTile_ r c board)
 
 removeTile_ :: RowNum -> ColNum -> [[Cell]] -> (Tile, [[Cell]])
 removeTile_ _ _ [] = error "Empty board!"
@@ -97,28 +108,30 @@ removeTileFromCell (tile:tiles) = (tile, tiles)
 -- Growing the board
 
 growLeft :: Board -> Board
-growLeft (MakeBoard board) = MakeBoard (mapList growRowLeft board)
+growLeft (MakeBoard parity board) =
+  MakeBoard (flipParity parity) (mapList growRowLeft board)
 
 growRowLeft :: [Cell] -> [Cell]
 growRowLeft row = []:row
 
 growRight :: Board -> Board
-growRight (MakeBoard board) = MakeBoard (mapList growRowRight board)
+growRight (MakeBoard parity board) =
+  MakeBoard parity (mapList growRowRight board)
 
 growRowRight :: [Cell] -> [Cell]
 growRowRight [] = [[]]
 growRowRight (cell:cells) = cell : growRowRight cells
 
 growUp :: Board -> Board
-growUp board@(MakeBoard rows) =
+growUp board@(MakeBoard parity rows) =
   let
     numCols :: Int
     numCols = boardCols board
   in
-    MakeBoard (makeListOfLength numCols [] : rows)
+    MakeBoard parity (makeListOfLength numCols [] : rows)
 
 growDown :: Board -> Board
-growDown board@(MakeBoard rows) =
+growDown board@(MakeBoard parity rows) =
   let
     numCols :: Int
     numCols = boardCols board
@@ -126,4 +139,4 @@ growDown board@(MakeBoard rows) =
     newRow :: [Cell]
     newRow = makeListOfLength numCols []
   in
-    MakeBoard (rows ++ [newRow])
+    MakeBoard parity (rows ++ [newRow])
