@@ -27,4 +27,16 @@ updateGame move (MakeGame color whiteBugs blackBugs board) =
         MakeGame (flipColor color) whiteBugs blackBugs board''
 
     NewTile bug (row, col) ->
-      undefined
+      let
+        board' = placeTile row col (MakeTile color bug) board
+        color' = flipColor color
+        whiteBugs' =
+          case color of
+            White -> listDelete bug whiteBugs
+            Black -> whiteBugs
+        blackBugs' =
+          case color of
+            White -> blackBugs
+            Black -> listDelete bug blackBugs
+      in
+        MakeGame color' whiteBugs' blackBugs' board'

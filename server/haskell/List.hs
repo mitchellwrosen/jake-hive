@@ -12,3 +12,10 @@ listLast :: [a] -> Maybe a
 listLast [] = Nothing
 listLast (x:[]) = Just x
 listLast (_:xs) = listLast xs
+
+listDelete :: Eq a => a -> [a] -> [a]
+listDelete x [] = []
+listDelete x (y:ys) =
+  case x == y of
+    True -> ys
+    False -> y : listDelete x ys

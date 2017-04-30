@@ -6,7 +6,7 @@ data Bug where
   Grasshopper :: Bug
   Beetle :: Bug
   Queen :: Bug
-  deriving (Show)
+  deriving (Eq, Show)
 
 initialBugSupply :: [Bug]
 initialBugSupply =
