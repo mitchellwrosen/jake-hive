@@ -9,4 +9,8 @@ dependencies:
   - base
 
 library:
-  source-dirs: .
+  source-dirs: src
+
+executables:
+  hive-server:
+    main: Server.hs
