@@ -14,3 +14,12 @@ library:
 executables:
   hive-server:
     main: Server.hs
+    dependencies:
+      - text
+      - websockets
+
+  dummy-client:
+    main: Client.hs
+    dependencies:
+      - text
+      - websockets
