@@ -4,6 +4,11 @@ hive notes
 
 hive project github repo:
 https://github.com/mitchellwrosen/jake-hive
+
+to get npm so you can install the hive-app UI and the fake-server:
+	1. go to https://www.npmjs.com/get-npm
+	2. click on the "Download Node.js and npm"
+	3. follow the instructions and do the usual install - that's it!
 	
 to run the localhost hive FAKE server:
 	1. cd jake-hive/client/fake-server
