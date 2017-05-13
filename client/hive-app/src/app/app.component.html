@@ -1,0 +1,25 @@
+<div style="width: 900px; height: 40px">
+	<div style="float: left;">
+		<h4>This is the amazing game of {{name}} </h4>
+	</div>
+	<div style="float: right;">
+		<chat-component (serverData)='handleServerEvent($event)'></chat-component>
+	</div>
+</div>
+<!--
+<app-user (childData)='handleEvent($event)'></app-user>
+<div *ngIf="currentSelectedId >= 0">
+	<small>( currentSelectedId = {{currentSelectedId}} )</small> ........
+    <small>( hiveBoardState(currentSelectedId) = {{hiveBoardState[currentSelectedId].highlight}} )</small>
+</div>
+<div *ngIf="placement_xy.x > 0 && placement_xy.y > 0">
+    <small>( placement_xy = {{placement_xy.x}}, {{placement_xy.y}})</small>
+</div>
+-->
+<div style="padding-bottom: 10px"></div>
+<div style="padding: 10px"></div>
+<div id="gamecontainer">
+    <canvas #hiveCanvas id="hiveCanvas" width="1400" height="1200" style="border:1px solid #d3d3d3;">
+        Your browser does not support the HTML5 canvas tag.
+    </canvas>
+</div>

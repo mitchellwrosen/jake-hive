@@ -1,0 +1,58 @@
+============
+hive notes
+============
+
+hive project github repo:
+https://github.com/mitchellwrosen/jake-hive
+	
+to run the localhost hive FAKE server:
+	1. cd jake-hive/client/fake-server
+	2. npm install (you only need to do this one time)
+	3. node server (server will startup up on port 8080 and listen for messages)
+
+to run the localhost hive client UI:
+	1. cd jake-hive/client/hive-app
+	2. npm install (you only need to do this one time)
+	2. ng server
+	3. http://localhost:4200
+
+server board state example:
+{
+	"tag": "game_state_move",
+	"contents": {
+		"board" : { 
+			"rows": 9,
+			"cols": 11,
+			"parity": false,
+			"cells": [
+				{"row" : 4, "col" : 2, "tiles" : [ {"bug" : "beetle", "color" : "white"} ]},
+				{"row" : 4, "col" : 3, "tiles" : [ {"bug" : "ant",    "color" : "white"}, {"bug" : "spider", "color" : "black"} ]},
+				{"row" : 5, "col" : 4, "tiles" : [ {"bug" : "queen",  "color" : "black"} ]}
+			]
+		}
+	}
+}
+
+====================================
+miscellaneous notes for dad	
+====================================
+
+to deploy to a non-root folder of the website:
+	1. cd jake-hive/client/hive-app
+	2. ng build --prod --base-href \"/hive/\"
+	3. copy all files in the dist folder to <website_root>/hive
+	4. done!
+
+to pull down a github angular 2 websocket demo app, here is the best example:
+(note: this was used to get websockets into the hive app above)
+	https://www.dev6.com/Angular2-WebSockets
+	https://github.com/DEV6hub/DEV6Blog/tree/master/angular2socketio
+
+	note that the angular-cli.json file in the root of the demo needs this change:
+	
+	"scripts": [],
+    "environmentSource": "environments/environment.ts",
+    "environments": {
+      "dev": "environments/environment.ts",
+      "prod": "environments/environment.prod.ts"
+    }
