@@ -1,6 +1,9 @@
 Board
   = {
-      "board": [[Cell]]
+      "rows": int,
+      "cols": int,
+      "parity": bool,
+      "cells": [Cell]
     }
 
 Bug
@@ -17,12 +20,6 @@ Color
   = "white"
   | "black"
 
-Coord
-  = {
-      "row": int,
-      "col": int
-    }
-
 Game
   = {
       "turn": Color,
@@ -33,6 +30,8 @@ Game
 
 Tile
   = {
+      "row": int,
+      "col": int,
       "color": Color,
       "bug": Bug
     }
