@@ -2,6 +2,8 @@
 
 module Main where
 
+import Control.Concurrent (threadDelay)
+import Control.Exception (onException)
 import Data.IORef
 import Data.Text (Text, pack)
 import Network.WebSockets
@@ -26,10 +28,36 @@ app countRef pconn = do
 
   conn <- acceptRequest pconn
 
-  count <- readIORef countRef
-  writeIORef countRef (count + 1)
+  count <- modifyReadIORef countRef (\c -> c + 1)
 
-  sendText conn (intToText count)
+  let action :: IO ()
+      action = do
+        sendText conn (intToText count)
+
+        forever (do
+          putStrLn "Sending ping"
+
+          sendPing conn ("" :: Text)
+
+          putStrLn "Sent ping"
+
+          threadDelay (1*1000*1000))
+
+      cleanup :: IO ()
+      cleanup = modifyIORef countRef (\c -> c - 1)
+
+  onException action cleanup
+
+modifyReadIORef :: IORef a -> (a -> a) -> IO a
+modifyReadIORef ref f = do
+  a <- readIORef ref
+  writeIORef ref (f a)
+  pure a
+
+forever :: IO a -> IO a
+forever action = do
+  action
+  forever action
 
 intToText :: Int -> Text
 intToText n = pack (show n)
